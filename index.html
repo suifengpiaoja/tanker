@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="utf-8">
+<style type="text/css">
+body {
+font: 14px "sans-serif"
+}
+
+#Map {
+background-color: #1ce748;
+}
+
+.show {
+float: left
+}
+
+#guide {
+float: left;
+width: 200px;
+height: 390px;
+margin-left: 5px;
+background: #CCCCCC;
+padding: 5px;
+}
+</style>
+<script type="text/javascript" src="Tank.js"></script>
+<script type="text/javascript" src="Bullet.js"></script>
+<script type="text/javascript" src="Bomb.js"></script>
+<script type="text/javascript" src="Draw.js"></script>
+
+<script type="text/javascript">
+window.onload = function () {
+//画布信息
+width = document.getElementById ('Map').width;
+height = document.getElementById ('Map').height;
+ctx = document.getElementById ('Map').getContext ('2d');
+//初始页面
+var starImg = new Image ();
+starImg.src = "img/star.jpg";
+starImg.onload = function () {
+ctx.drawImage (starImg, 0, 0, width, height);
+}
+
+//键盘监听 回车开始游戏
+document.body.onkeydown = function () {
+var keycode = event.keyCode;
+switch (keycode) {
+case 13:
+//初始化参数
+init ()
+//刷新页面
+setInterval (draw, 30);
+document.body.onkeydown = gameControl;
+break;
+}
+}
+}
+
+function init () {
+//玩家和电脑
+hero = new Hero (100, 300, 0);
+enemys = [];
+for (var i = 0; i < 3; i++) {
+enemys.push (new Enemy (100 + i * 50, 0, 2));
+}
+//合并数组
+allTank = enemys.concat (hero);
+
+//炸弹
+Bombs = [];
+im = new Image ();
+im2 = new Image ();
+im3 = new Image ();
+im.src = "img/bomb_3.gif";
+im2.src = "img/bomb_2.gif";
+im3.src = "img/bomb_1.gif";
+}
+
+function gameControl () {
+var keycode = event.keyCode;
+switch (keycode) {
+case 65:
+hero.moveLeft ();
+break;//左
+case 83:
+hero.moveDown ();
+break;//下
+case 87:
+hero.moveUp ();
+break;//上
+case 68:
+hero.moveRight ();
+break;//右
+case 74:
+hero.shot ();
+break;
+case 49:
+hero.addLife ()
+break;
+}
+}
+
+//扩展 删除指定元素
+Array.prototype.deleteElement = function (obj) {
+if (obj) {
+for (var i = 0; i < this.length; i++) {
+if (this[i] === obj) {
+this.splice (i, 1);
+}
+}
+}
+}
+
+</script>
+</head>
+<body>
+<div class="show">
+<canvas id="Map" width="500px" height="400px">
+</canvas>
+<audio id="music" autoplay="autoplay">
+<source src="music/111.wav">
+</audio>
+</div>
+<div id="guide">
+
+<p>按下回车键开始游戏</p>
+
+<p>按下1键增加生命,默认是1</p>
+
+<p>剩余生命数 :<label id="life">1</label></p>
+
+<div id="data">
+
+</div>
+</div>
+</body>
+</html>
